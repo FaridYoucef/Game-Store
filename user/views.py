@@ -42,3 +42,20 @@ def login(request):
     else:
         # If authentication fails, return an error message
         return Response({"detail": "Invalid credentials"}, status=status.HTTP_401_UNAUTHORIZED)
+    
+    
+    
+    
+# User logout method
+@api_view(['POST'])
+def logout(request):
+    # Get the token of the authenticated user from the request
+    token = request.auth
+    
+    # If the token exists, delete it to log the user out
+    if token:
+        token.delete()
+        return Response({"message": "User logged out successfully"}, status=status.HTTP_200_OK)
+    
+    # If no token is found, return an error
+    return Response({"error": "No token provided, user not authenticated"}, status=status.HTTP_400_BAD_REQUEST)

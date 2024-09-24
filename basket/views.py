@@ -15,8 +15,8 @@ def add_to_basket(request):
     #Get the Product
     try:
         product = Product.objects.get(id=product_id)
-    except Product.doesNotExit:
-        return Response({"error": "Product not fount"}, status=status.HTTP_404_NOT_NOT_FOUND)
+    except Product.DoesNotExist:
+        return Response({"error": "Product not found"}, status=status.HTTP_404_NOT_FOUND)
     
      # Check if item is already in the basket
     basket_item, created = BasketItem.objects.get_or_create(user=user, product=product)
@@ -30,7 +30,7 @@ def add_to_basket(request):
 # List all items in the basket
 @api_view(['GET'])
 def get_basket(request):
-    user = resquest.user
+    user = request.user
     basket_items = BasketItem.objects.filter(user=user)
     serializer = BasketItemSerializer(basket_items, many=True)
     return Response(serializer.data, status=status.HTTP_200_OK)

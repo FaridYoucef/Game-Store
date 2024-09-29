@@ -63,6 +63,10 @@ MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
 ]
 
+CORS_ORIGIN_WHITELIST = [
+    'http://localhost:5173',  # Add your frontend domain here
+]
+
 ROOT_URLCONF = 'gamingStore.urls'
 
 TEMPLATES = [

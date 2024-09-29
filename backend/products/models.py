@@ -7,6 +7,7 @@ from datetime import datetime
 class Category(models.Model):
     name = models.CharField(max_length=250)
     slug = models.SlugField(unique=True)
+    navbar_display = models.BooleanField(default=True)
 
     class Meta:
         verbose_name_plural = "categories"

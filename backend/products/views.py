@@ -8,8 +8,17 @@ from django.http import HttpResponse
 
 # Create your views here.
 class productListView(generics.ListAPIView):
-    queryset = Product.objects.filter(available=True)
     serializer_class = ProductSerializer
+    
+    def get_queryset(self):
+        # Retrieve the 'category' parameter from the request
+        category_slug = self.request.query_params.get('category', None)
+        if category_slug:
+             # Filter products by the category slug if provided
+            return Product.objects.filter(category__slug=category_slug, available=True)
+         # Return all available products if no category is specified
+        return Product.objects.filter(available=True)
+    
     
 class ProductDetailView(generics.RetrieveAPIView):
     queryset = Product.objects.filter(available=True)
@@ -17,7 +26,7 @@ class ProductDetailView(generics.RetrieveAPIView):
     lookup_field = 'slug'
     
 class CategoryListView(generics.ListAPIView):
-    querySet = Category.objects.filter(navbar_display=True)
+    queryset = Category.objects.filter(navbar_display=True)
     serializer_class = CategorySerializer
 
 @api_view(['GET']) 

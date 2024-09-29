@@ -3,6 +3,7 @@ import { FaSearch } from "react-icons/fa";
 import { SlBasket } from "react-icons/sl";
 import { FaSignInAlt } from "react-icons/fa";
 import axios from "axios";
+import { Link } from 'react-router-dom';
 
 const Navbar = () => {
   const [categories, setCategories] = useState([]);
@@ -38,9 +39,9 @@ const Navbar = () => {
         <div>
           <ul className="flex space-x-5 text-black font-medium">
             {categories.map((category) => (
-              <a key={category.slug} to={`/categories/${category.slug}`}>
+              <Link key={category.slug} to={`/categories/${category.slug}`}>
                 {category.name}
-              </a>
+              </Link>
             ))}
           </ul>
         </div>

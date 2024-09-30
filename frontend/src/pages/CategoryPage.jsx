@@ -42,15 +42,16 @@ const CategoryPage = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {products.length > 0 ? (
           products.map((product) => (
-            <div key={product.id} className="border p-4 rounded shadow">
+            <div key={product.id} className="border p-4 rounded shadow space-y-1">
               <img
                 src={product.image}
                 alt={product.name}
-                className="w-full h-40 object-cover mb-2"
+                className="w-full object-cover mb-2"
               />
               <h2 className="text-lg font-semibold">{product.name}</h2>
               <p className="text-gray-700">{product.description}</p>
-              <p className="text-green-600 font-bold">${product.price}</p>
+              <p className="text-green-600 font-bold pb-2">${product.price}</p>
+              <button className=" bg-fuchsia-600 text-white font-bold py-3 px-5 rounded-lg">Buy Now</button>
             </div>
           ))
         ) : (

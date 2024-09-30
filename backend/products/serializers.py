@@ -12,9 +12,10 @@ class BrandSerializer(serializers.ModelSerializer):
         fields = ['id', 'name', 'website']
         
 class ProductSerializer(serializers.ModelSerializer):
+    brand = serializers.CharField(source='brand.name', read_only=True)
     class Meta:
         model = Product
         fields = [
-            'id', 'name', 'description', 'slug', 'price', 'brand' 'available',
+            'id', 'name', 'description', 'slug', 'price', 'brand', 'available',
              'created', 'updated', 'image' 
         ]

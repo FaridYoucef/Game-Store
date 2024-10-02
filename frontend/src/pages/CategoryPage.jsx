@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
+import Slider from "react-slick";
 
 const CategoryPage = () => {
   const { slug } = useParams();
@@ -36,8 +37,19 @@ const CategoryPage = () => {
   if (loading) return <div>Loading...</div>;
   if (error) return <div>{error}</div>;
 
+  const settings = {
+    dots: true,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 3,
+    slidesToScroll: 1,
+    centerMode: true,
+    centerPadding: "0",
+    arrows: true,
+  };
+
   return (
-    <div className="container mx-auto p-4 space-y-10">
+    <div className="container mx-auto p-4 space-y-10 ">
       <div className=" flex flex-col items-center text-center p-4 gap-20">
         <img className="w-[30rem] mt-8" src="../pp.png" alt="" />
         <div className="space-y-5">
@@ -57,41 +69,87 @@ const CategoryPage = () => {
             </div>
             <div>
               <a href="">
-                <img src="../ps5-m.jpeg" alt="" className="w-[120px] h-[100px]" />
+                <img
+                  src="../ps5-m.jpeg"
+                  alt=""
+                  className="w-[120px] h-[100px]"
+                />
                 accessoires
               </a>
             </div>
           </div>
         </div>
       </div>
-      <section className="items-center justify-center flex flex-col">
-      <h1 className="text-2xl font-bold mb-4">Console: {slug}</h1>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {products.length > 0 ? (
-                products.map((product) => (
-                  <div
-                    key={product.id}
-                    className="border p-4 rounded shadow space-y-1"
-                  >
-                    <img
-                      src={product.image}
-                      alt={product.name}
-                      className="w-full object-cover mb-2"
-                    />
-                    <h2 className="text-lg font-semibold">{product.name}</h2>
-                    <p className="text-gray-700">{product.description}</p>
-                    <p className="text-green-600 font-bold pb-2">${product.price}</p>
-                    <button className=" bg-fuchsia-600 text-white font-bold py-3 px-5 rounded-lg">
-                      Buy Now
-                    </button>
-                  </div>
-                ))
-              ) : (
-                <div>No products found in this category.</div>
-              )}
+
+      <div className="container mx-auto flex flex-col justify-center items-center pb-8">
+        <div className="w-full max-w-6xl">
+          <h2 className="">Games</h2>
+          <Slider {...settings}>
+            <div>
+              <img
+                src="../fc24.jpg"
+                alt="fc24"
+                className="w-[300px] h-[300px]"
+              />
             </div>
+            <div>
+              <img
+                src="../apex.jpeg"
+                alt="Image 2"
+                className="w-[300px] h-[300px]"
+              />
+            </div>
+            <div>
+              <img
+                src="../Overwatch.jpg"
+                alt="Image 3"
+                className="w-[300px] h-[300px]"
+              />
+            </div>
+          </Slider>
+        </div>
+      </div>
+
+      {/* The console section */}
+      <section className="items-center justify-center flex flex-col">
+        <div className="text-center mb-16 max-w-[650px] space-y-4">
+          <h1 className="text-xl font-bold ">Console</h1>
+          <p className="text-sm">
+            No matter which of the PlayStation consoles you’re after you’ll find
+            it here. Find the console or bundle which is right for you and
+            experience everything PlayStation has to offer!
+          </p>
+        </div>
+        <h1 className="text-2xl font-bold flex">{slug} bundles</h1>
+        <div className="grid grid-cols-2 md:grid-cols-2 gap-6 mt-4">
+          {products.length > 0 ? (
+            products.map((product) => (
+              <div
+                key={product.id}
+                className="border px-14 rounded shadow flex items-end"
+              >
+                <div className="mb-4">
+                  <h2 className="font-semibold">{product.name}</h2>
+                  <p className="text-gray-700">{product.description}</p>
+                  <p className="text-green-600 font-bold pb-2">
+                    ${product.price}
+                  </p>
+                  <button className=" bg-fuchsia-600 text-white font-bold py-3 px-5 rounded-lg">
+                    Buy Now
+                  </button>
+                </div>
+                <img
+                  src={product.image}
+                  alt={product.name}
+                  className=" object-cover w-full"
+                />
+              </div>
+            ))
+          ) : (
+            <div>No products found in this category.</div>
+          )}
+        </div>
       </section>
-    
     </div>
   );
 };

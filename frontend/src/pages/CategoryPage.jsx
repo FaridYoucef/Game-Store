@@ -37,19 +37,23 @@ const CategoryPage = () => {
   if (loading) return <div>Loading...</div>;
   if (error) return <div>{error}</div>;
 
+  // Slider Logic
   const settings = {
     dots: true,
     infinite: true,
     speed: 500,
-    slidesToShow: 3,
+    slidesToShow: 4,
     slidesToScroll: 1,
     centerMode: true,
-    centerPadding: "0",
+    centerPadding: "1",
     arrows: true,
   };
 
   return (
+      //  Page container
     <div className="container mx-auto p-4 space-y-10 ">
+
+      {/* // Category of the Productons  */}
       <div className=" flex flex-col items-center text-center p-4 gap-20">
         <img className="w-[30rem] mt-8" src="../pp.png" alt="" />
         <div className="space-y-5">
@@ -81,9 +85,13 @@ const CategoryPage = () => {
         </div>
       </div>
 
-      <div className="container mx-auto flex flex-col justify-center items-center pb-8">
-        <div className="w-full max-w-6xl">
-          <h2 className="">Games</h2>
+  {/* Games card slider */}
+      <div className="container mx-auto flex flex-col justify-center items-center pb-8 text-center">
+        <div className="w-full">
+          <h2 className="font-bold pb-5 ">Games</h2>
+          <p className=" pb-10 ">
+             Discover the latest PlayStation games from exclusive blockbusters to innovative indies as well as a host of upcoming releases.
+          </p>
           <Slider {...settings}>
             <div>
               <img
@@ -150,6 +158,49 @@ const CategoryPage = () => {
           )}
         </div>
       </section>
+
+      {/* Accessoirs */}
+      <div className="space-y-5 flex flex-col justify-center items-center text-center pb-20">
+          <h2 className="text-xl font-bold mt-16">Accessoirs</h2>
+          <p className="text-sm text-">
+          Push the boundaries of play with the new generation of PlayStation accessories on PS5. 
+          
+          </p>
+          <div className="flex items-center gap-8 space-y-3">
+            <div>
+              <a href="">
+                <img src="../stg.jpg" alt="" className="w-[80px] h-[100px]" />
+                Storage
+              </a>
+            </div>
+            <div >
+              <a href="">
+                <img src="../hdset.jpg" alt="" className="w-[80px] h-[100px]" />
+                Headset
+              </a>
+            </div>
+            <div>
+              <a href="">
+                <img
+                  src="../ps5-m.jpeg"
+                  alt=""
+                  className="w-[120px] h-[100px]"
+                />
+                Controllers
+              </a>
+            </div>
+            <div>
+              <a href="">
+                <img
+                  src="../other.jpg"
+                  alt=""
+                  className="w-[120px] h-[100px]"
+                />
+                Other
+              </a>
+            </div>
+          </div>
+        </div>
     </div>
   );
 };

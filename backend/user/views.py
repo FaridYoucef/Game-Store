@@ -5,6 +5,8 @@ from rest_framework.response import Response
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
 from .serializers import UserSerializer
+from .models import UserProfile
+
 
 #Creating the user register method
 @api_view(['POST'])
@@ -59,3 +61,8 @@ def logout(request):
     
     # If no token is found, return an error
     return Response({"error": "No token provided, user not authenticated"}, status=status.HTTP_400_BAD_REQUEST)
+
+
+# users_without_profile = User.objects.filter(userprofile__isnull=True)
+# for user in users_without_profile:
+#     UserProfile.objects.create(user=user)

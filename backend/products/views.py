@@ -13,11 +13,19 @@ class productListView(generics.ListAPIView):
     def get_queryset(self):
         # Retrieve the 'category' parameter from the request
         category_slug = self.request.query_params.get('category', None)
+        product_type = self.request.query_params.get('type', None)
+        
+        queryset = Product.objects.filter(available=True)
+        
         if category_slug:
              # Filter products by the category slug if provided
-            return Product.objects.filter(category__slug=category_slug, available=True)
+            queryset = queryset.filter(category__slug=category_slug)
+        
+        if product_type:
+            queryset = queryset.filter(type=product_type)
          # Return all available products if no category is specified
-        return Product.objects.filter(available=True)
+        return queryset
+        print(queryset)
     
     
 class ProductDetailView(generics.RetrieveAPIView):

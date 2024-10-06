@@ -21,6 +21,8 @@ class Brand(models.Model):
     website = models.URLField(blank=True, null=True)
 
 class Product(models.Model):
+   
+    
     category = models.ForeignKey(Category, related_name='products', on_delete=models.CASCADE)
     name = models.CharField(max_length=250)
     slug = models.SlugField(max_length=250)
@@ -31,6 +33,13 @@ class Product(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now_add=True)
     image = models.ImageField(upload_to='products', blank=True, null=True)
+    
+    TYPE_CHOICES = [
+        ('games', 'Games'),
+        ('consoles', 'Consoles'),
+        ('accessories', 'Accessories'),
+    ]
+    type = models.CharField(max_length=20, choices=TYPE_CHOICES)
 
     def __str__(self):
         return self.name

@@ -1,9 +1,10 @@
 import React from 'react'
+import HeroSlider from '../components/HeroSlider'
 
 const HomePage = () => {
   return (
-    <div className='flex justify-center items-center h-screen'>
-        <h1 className='text-blue-400 text-2xl'>Home Page</h1>
+    <div>
+        <HeroSlider />
     </div>  
   )
 }

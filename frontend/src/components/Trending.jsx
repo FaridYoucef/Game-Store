@@ -40,7 +40,7 @@ const Trending = () => {
           className="w-[300px] h-[300px] object-center rounded-t-lg transform transition-transform duration-500 ease-in-out group-hover:scale-110" />
           <h1 className="font-bold">EA Sports FC 25</h1>
           <p className="text-gray-500">More ways to ein fro the club</p>
-          <button className="bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-3 md:py-1.5 md:px-4 lg:py-2 lg:px-6rounded ">
+          <button className="bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-3 md:py-1.5 md:px-4 lg:py-2 lg:px-6 rounded ">
             Buy Now
           </button>
         </div>

@@ -2,7 +2,7 @@ import React from 'react'
 
 const PcDeals = () => {
     return (
-        <div className="relative h-full w-full max-w-7xl mx-auto my-10">
+        <div className="relative h-full w-full max-w-7xl mx-auto mt-6">
           {/* Hero Image*/}
           <div className="relative h-full">
             <img

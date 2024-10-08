@@ -3,6 +3,7 @@ import HeroSlider from '../components/HeroSlider'
 import LogoSet from '../components/LogoSet'
 import Trending from '../components/Trending.jsx'
 import PcDeals from '../components/PcDeals.jsx'
+import GearShop from '../components/GearShop.jsx'
 
 const HomePage = () => {
   return (
@@ -11,6 +12,7 @@ const HomePage = () => {
         <LogoSet />
         <Trending />
         <PcDeals />
+        <GearShop />
     </div>  
   )
 }

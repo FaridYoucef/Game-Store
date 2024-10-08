@@ -4,6 +4,7 @@ import LogoSet from '../components/LogoSet'
 import Trending from '../components/Trending.jsx'
 import PcDeals from '../components/PcDeals.jsx'
 import GearShop from '../components/GearShop.jsx'
+import Footer from '../components/Footer.jsx'
 
 const HomePage = () => {
   return (
@@ -13,6 +14,7 @@ const HomePage = () => {
         <Trending />
         <PcDeals />
         <GearShop />
+        <Footer />
     </div>  
   )
 }

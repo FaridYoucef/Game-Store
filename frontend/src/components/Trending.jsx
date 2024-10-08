@@ -32,7 +32,7 @@ const Trending = () => {
   };
 
   return (
-    <div className="mt-20 relative hero-slider w-full mx-auto p-4">
+    <div className="mt-2 relative hero-slider w-full mx-auto p-4">
         <h1 className="uppercase md:text-xl lg:text-2xl mb-4">Trending</h1>
       <Slider {...settings}>
         <div className="space-y-4 shadow-lg group">

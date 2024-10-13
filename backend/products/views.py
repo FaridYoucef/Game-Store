@@ -25,14 +25,15 @@ class productListView(generics.ListAPIView):
             queryset = queryset.filter(type=product_type)
          # Return all available products if no category is specified
         return queryset
-        print(queryset)
-    
+
+
     
 class ProductDetailView(generics.RetrieveAPIView):
     queryset = Product.objects.filter(available=True)
-    serializer = ProductSerializer
+    serializer_class = ProductSerializer
     lookup_field = 'slug'
     
+
 class CategoryListView(generics.ListAPIView):
     queryset = Category.objects.filter(navbar_display=True)
     serializer_class = CategorySerializer

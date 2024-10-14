@@ -83,6 +83,44 @@ const Navbar = () => {
                     </a>
                 </div>
             </div>
+
+            {/* Mobile Menu Links */}
+            <div className={`md:hidden ${isOpen ? "block" : "hidden"}`}>
+                <ul className="flex flex-col space-y-2 mt-2">
+                    {categories.map((category) => (
+                        <li key={category.slug}>
+                            <Link to={`/categories/${category.slug}`}>
+                                {category.name}
+                            </Link>
+                        </li>
+                    ))}
+                </ul>
+
+                {/* Search and Icons in the Hamburger Menu */}
+                <div className="flex flex-col space-y-2 mt-2">
+                    <div className="flex items-center rounded-full px-2 py-1">
+                        {/* Search Input */}
+                        <input
+                            type="text"
+                            placeholder="Search"
+                            className="border border-gray-300 rounded-lg p-1"
+                        />
+                        <a>
+                            <FaSearch className="ml-2" />
+                        </a>
+                    </div>
+
+                    <a href="/basket" className="flex items-center">
+                        <SlBasket />
+                        <span className="ml-2">Basket</span>
+                    </a>
+
+                    <a href="/signin" className="flex items-center">
+                        <FaSignInAlt />
+                        <span className="ml-2">Sign In</span>
+                    </a>
+                </div>
+            </div>
         </nav>
     );
 };   

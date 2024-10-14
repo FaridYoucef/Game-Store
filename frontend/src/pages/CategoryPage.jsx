@@ -124,14 +124,14 @@ const CategoryPage = () => {
 
         <h1 className="text-2xl font-bold flex">{slug} bundles</h1>
         
-        <div className="grid grid-cols-2 md:grid-cols-2 gap-6 mt-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
           {consoles.length > 0 ? (
             consoles.map((console) => (
               <div
                 key={console.id}
                 className="border px-14 rounded shadow flex items-end "
               >
-                <div className="mb-4 mr-">
+                <div className="mb-4">
                   <h2 className="font-semibold">{console.name}</h2>
                   <p className="text-gray-700">{console.description}</p>
                   <p className="text-green-600 font-bold pb-2">
@@ -144,7 +144,7 @@ const CategoryPage = () => {
                 <img
                   src={console.image}
                   alt={console.name}
-                  className="object-cover w-[300px] h-[300px]"
+                  className="object-cover w-[200px] h-[200px] md:w-[300px] md:h-[300px]"
                 />
               </div>
             ))

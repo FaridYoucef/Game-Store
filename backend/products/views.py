@@ -10,6 +10,7 @@ from django.http import HttpResponse
 # Create your views here.
 class productListView(generics.ListAPIView):
     serializer_class = ProductSerializer
+    queryset = Product.objects.all()
     permission_classes = [AllowAny]
     
     def get_queryset(self):
@@ -31,9 +32,10 @@ class productListView(generics.ListAPIView):
 
     
 class ProductDetailView(generics.RetrieveAPIView):
-    queryset = Product.objects.filter(available=True)
+    queryset = Product.objects.all()
     serializer_class = ProductSerializer
-    lookup_field = 'slug'
+    permission_classes = [AllowAny]
+    lookup_field = 'id'
     
 
 class CategoryListView(generics.ListAPIView):

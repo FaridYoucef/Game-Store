@@ -46,7 +46,7 @@ const ProductList = () => {
             <p className="text-sm text-gray-500">Type: {product.type}</p>
 
             {/* Link to product detail page - no category */}
-            <Link to={`/product/${product.slug}`}>
+            <Link to={`/products/${product.id}`}>
               <button className="mt-4 bg-blue-500 text-white font-bold py-2 px-4 rounded">
                 View Details
               </button>

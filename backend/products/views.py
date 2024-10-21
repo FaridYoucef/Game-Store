@@ -1,5 +1,6 @@
 from django.shortcuts import render
-from rest_framework.decorators import api_view
+from rest_framework.permissions import AllowAny
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework import generics
 from rest_framework.response import Response
 from .models import Category, Product, Brand
@@ -9,6 +10,7 @@ from django.http import HttpResponse
 # Create your views here.
 class productListView(generics.ListAPIView):
     serializer_class = ProductSerializer
+    permission_classes = [AllowAny]
     
     def get_queryset(self):
         # Retrieve the 'category' parameter from the request
@@ -39,6 +41,7 @@ class CategoryListView(generics.ListAPIView):
     serializer_class = CategorySerializer
 
 @api_view(['GET']) 
+@permission_classes([AllowAny])
 def navbar_categories(request): 
     # Filter categories that should be displayed in the navbar
     categories = Category.objects.filter(navbar_display=True)

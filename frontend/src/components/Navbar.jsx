@@ -5,6 +5,7 @@ import { FaSignInAlt } from 'react-icons/fa';
 import { GiHamburgerMenu } from 'react-icons/gi';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
+import UserIcon from './auth/UserIcon';
 
 const Navbar = () => {
     const [categories, setCategories] = useState([]);
@@ -79,7 +80,7 @@ const Navbar = () => {
                     </a>
 
                     <a href="/signin">
-                        <FaSignInAlt />
+                      <UserIcon />
                     </a>
                 </div>
             </div>
@@ -116,7 +117,7 @@ const Navbar = () => {
                     </a>
 
                     <a href="/signin" className="flex items-center">
-                        <FaSignInAlt />
+                        <UserIcon />
                         <span className="ml-2">Sign In</span>
                     </a>
                 </div>

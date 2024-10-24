@@ -25,3 +25,13 @@ class UserProfileView(generics.RetrieveAPIView):
         user = self.request.user
         UserProfile.objects.get_or_create(user=user)  # Ensure profile exists
         return user.userprofile
+
+
+# Update user profile view (requires authentication)
+class UpdateUserProfileView(generics.UpdateAPIView):
+    queryset = UserProfile.objects.all()
+    serializer_class = UserProfileSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_object(self):
+        return self.request.user.userprofile

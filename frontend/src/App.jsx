@@ -8,6 +8,7 @@ import ProductList from "./pages/ProductList";
 import Register from "./components/auth/Register";
 import Login from "./components/auth/Login";
 import axios from 'axios';
+import UserProfileForm from "./pages/UserProfileForm";
 
 // Configure Axios to include the correct CSRF token handling
 axios.defaults.xsrfCookieName = 'csrftoken';
@@ -27,6 +28,7 @@ function App() {
           <Route path="/user/register/" element={<Register />} />
           <Route path="/user/login/" element={<Login />} />
           <Route path="/user/profile/" element={< HomePage/>} />
+          <Route path="/user/profile/update/" element={<UserProfileForm />} />
         
         </Routes>
       </div>

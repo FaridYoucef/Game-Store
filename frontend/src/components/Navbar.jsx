@@ -79,9 +79,7 @@ const Navbar = () => {
                         <SlBasket />
                     </a>
 
-                    <a href="/signin">
-                      <UserIcon />
-                    </a>
+                      <UserIcon />                  
                 </div>
             </div>
 
@@ -116,7 +114,7 @@ const Navbar = () => {
                         <span className="ml-2">Basket</span>
                     </a>
 
-                    <a href="/signin" className="flex items-center">
+                    <a href="" className="flex items-center">
                         <UserIcon />
                         <span className="ml-2">Sign In</span>
                     </a>

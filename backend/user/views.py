@@ -5,6 +5,10 @@ from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from .serializers import UserSerializer, UserProfileSerializer
 from .models import UserProfile
+from rest_framework.response import Response
+from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework.views import APIView
+from rest_framework import status
 
 # Create user view (for registration)
 @method_decorator(csrf_exempt, name='dispatch')
@@ -35,3 +39,14 @@ class UpdateUserProfileView(generics.UpdateAPIView):
 
     def get_object(self):
         return self.request.user.userprofile
+    
+
+class LogoutView(APIView):
+    def post(self, request):
+        try:
+            refresh_token = request.data["refresh_token"]
+            token = RefreshToken(refresh_token)
+            token.blacklist()
+            return Response(status=status.HTTP_205_RESET_CONTENT)
+        except Exception as e:
+            return Response(status=status.HTTP_400_BAD_REQUEST)    

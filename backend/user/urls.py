@@ -1,5 +1,5 @@
 from django.urls import path, include
-from .views import CreateUserView, UserProfileView, UpdateUserProfileView
+from .views import CreateUserView, UserProfileView, UpdateUserProfileView, LogoutView
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 urlpatterns = [
@@ -9,4 +9,5 @@ urlpatterns = [
     path("token/", TokenObtainPairView.as_view(), name="get_token"),  # JWT token obtain
     path("token/refresh/", TokenRefreshView.as_view(), name="refresh"),  # JWT token refresh
     path("api-auth/", include("rest_framework.urls")),  # DRF authentication
+    path('user/logout/', LogoutView.as_view(), name='logout'),
 ]

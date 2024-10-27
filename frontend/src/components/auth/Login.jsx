@@ -12,8 +12,9 @@ function Login() {
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
-    setLoading(true);
     e.preventDefault();
+    setLoading(true);
+    setError("");
 
     const csrfToken = getCookie("csrftoken"); // Get the CSRF token
     console.log("Logging in user with data:", { username, password });

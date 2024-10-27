@@ -1,105 +1,92 @@
-import React, { useEffect, useState, useRef } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import React, { useEffect, useState } from 'react';
 import api from "../../api";
+import { ACCESS_TOKEN } from "../../constant"; 
+import getCookie from '../../getCookie';
 
 const UserIcon = () => {
-  const [userData, setUserData] = useState(null);
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null); 
-  const navigate = useNavigate();
-  const dropDownRef = useRef(null);
+  const [userInfo, setUserInfo] = useState(null);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
 
   useEffect(() => {
-    const fetchUserData = async () => {
+    const fetchUserInfo = async () => {
+      const token = localStorage.getItem(ACCESS_TOKEN);
+      if (!token) {
+        setIsAuthenticated(false);
+        return; 
+      }
+
       try {
-        const token = localStorage.getItem("token");
-        if (token) {
-          const response = await api.get("/user/profile/", {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          });
-          setUserData(response.data);
+        const response = await api.get('/user/profile/', {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (response.data && response.data.user) {
+          setUserInfo(response.data.user);
+          setIsAuthenticated(true);
         } else {
-          navigate("/user/login"); 
+          setIsAuthenticated(false);
         }
       } catch (error) {
-        setError("Failed to fetch user data."); 
-      } finally {
-        setLoading(false);
+        console.error('Error fetching user info:', error);
+        setIsAuthenticated(false);
+        alert('Error fetching user info. Please try again.'); 
       }
     };
 
-    fetchUserData();
-  }, [navigate]);
-
-  // Handle Logout
-  const handleLogout = async (event) => {
-    event.preventDefault();
-    try {
-      await api.post("/user/logout/");
-      localStorage.removeItem("token");
-      setUserData(null);
-      navigate("/user/login");
-    } catch (error) {
-      console.error("Logout failed:", error);
-    }
-  };
-
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (dropDownRef.current && !dropDownRef.current.contains(event.target)) {
-        setIsDropdownOpen(false);
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
+    fetchUserInfo();
   }, []);
 
-  if (loading) {
-    return <p>Loading...</p>;
-  }
-
-  if (error) {
-    return <p>{error}</p>;
-  }
-
-  if (!userData) {
-    // Render Login as a button if no user data to prevent nested <a> tag issues
-    return (
-      <button onClick={() => navigate("/user/login")} className="text-blue-600 hover:underline">
-        Login
-      </button>
-    );
-  }
+  const handleLogout = async () => {
+    try {
+      const csrfToken = getCookie("csrftoken"); 
+      await api.post('/user/logout/', {}, {
+        headers: {
+          "X-CSRFToken": csrfToken, 
+        },
+      });
+      alert('Logged out successfully');
+      setUserInfo(null);
+      setIsAuthenticated(false);
+    } catch (error) {
+      console.error('Error logging out:', error.response || error);
+      alert('Error logging out. Please try again.');
+    }
+  };
+  
 
   return (
-    <div className="relative" ref={dropDownRef}>
-      <button
-        onClick={() => setIsDropdownOpen((prev) => !prev)}
-        className="flex items-center gap-2 text-gray-800"
-      >
-        {userData.profile_image ? (
+    <div className="relative inline-block text-left">
+      {userInfo ? (
+        <button
+          onClick={() => setDropdownOpen(!dropdownOpen)}
+          className="flex items-center space-x-2 p-2 bg-gray-200 rounded hover:bg-gray-300"
+          aria-haspopup="true"
+          aria-expanded={dropdownOpen}
+        >
           <img
-            src={userData.profile_image}
-            alt="User Icon"
-            className="w-10 h-10 rounded-full"
+            src={userInfo?.image || 'https://via.placeholder.com/40'}
+            alt="User Avatar"
+            className="w-8 h-8 rounded-full"
           />
-        ) : (
-          <div className="w-10 h-10 rounded-full bg-gray-300 flex items-center justify-center">
-            {userData.user?.username ? userData.user.username[0].toUpperCase() : "U"}
-          </div>
-        )}
-        <span>{userData.user?.username || "User"}</span>
-      </button>
+          <span>{userInfo?.username || 'User'}</span>
+        </button>
+      ) : (
+        <button
+         
+          className="p-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+        >
+          Sign In
+        </button>
+      )}
 
-      {isDropdownOpen && (
-        <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10">
+      {dropdownOpen && isAuthenticated && (
+        <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded shadow-lg z-10">
           <button
-            type="button"
             onClick={handleLogout}
-            className="block w-full text-left px-4 py-2 text-gray-800 hover:bg-gray-100"
+            className="w-full px-4 py-2 text-left text-red-600 hover:bg-red-100"
           >
             Logout
           </button>

@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import api from "../api";
+import { useParams,  useNavigate  } from "react-router-dom";
+import api from "../api"; // Import Axios instance with interceptors
 
 const ProductDetail = () => {
   const { id } = useParams(); // Get the product ID from URL params
+  const navigate = useNavigate();
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [quantity, setQuantity] = useState(1);
 
   const fetchProduct = async () => {
     try {
@@ -15,10 +17,20 @@ const ProductDetail = () => {
     } catch (err) {
       setError(
         "Error fetching product details: " + err.response?.data?.detail ||
-          "Unknown error"
-      );
+        "Unknown error"
+    );
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleAddToBasket = async () => {
+    try {
+      await api.post(`/add/`, { product_id: id, quantity });
+      alert("Product added to basket!");
+      navigate("/bassket");
+    } catch (err) {
+      setError("Failed to add product to basket");
     }
   };
 
@@ -32,7 +44,7 @@ const ProductDetail = () => {
   }, [id]);
 
   if (loading) return <p>Loading...</p>;
-  if (error) return <p>{error}</p>;
+  if (error) return <p className="text-red-500">{error}</p>;
 
   // Render product details once loaded
   return (
@@ -40,7 +52,7 @@ const ProductDetail = () => {
       {/* Product Details */}
       <div className="container mx-auto p-4 flex ">
         <div className="w-1/2">
-          <img src={product.image} alt={product.name} className=" object-cover" />
+          <img src={product.image} alt={product.name} className="object-cover" />
         </div>
 
         {/* Product Details */}
@@ -60,17 +72,23 @@ const ProductDetail = () => {
               type="number"
               id="quantity"
               min="1"
+              value={quantity}
+              onChange={(e) => setQuantity(e.target.value)}
               className="border rounded px-2 py-1"
             />
           </div>
-
-          <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
+          <button
+            onClick={handleAddToBasket}
+            className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
+          >
             Add to Basket
           </button>
         </div>
       </div>
-      {/* horizontal Border */}
+
+      {/* Horizontal Border */}
       <div className="border-b-2 border-gray-300 my-4 mx-6"></div>
+
       {/* Description */}
       <div className="container mx-auto p-4">
         <h1 className="font-bold mb-2">Description</h1>

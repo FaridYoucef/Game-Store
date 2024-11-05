@@ -1,20 +1,22 @@
 function getCookie(name) {
-    let cookieValue = null;
-    if (document.cookie && document.cookie !== '') {
+  let cookieValue = null;
+  console.log("All Cookies:", document.cookie); 
+  if (document.cookie && document.cookie !== '') {
       const cookies = document.cookie.split(';');
       for (let i = 0; i < cookies.length; i++) {
-        const cookie = cookies[i].trim();
-        // Does this cookie string begin with the name we want?
-        if (cookie.substring(0, name.length + 1) === (name + '=')) {
-          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-          break;
-        }
+          const cookie = cookies[i].trim();
+          console.log("Processing cookie:", cookie); 
+          // Does this cookie string begin with the name we want?
+          if (cookie.substring(0, name.length + 1) === (name + '=')) {
+              cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+              console.log("Found CSRF Token:", cookieValue);
+              break;
+          }
       }
-    }
-    console.log("CSRF Token:", cookieValue); // Log the token for debugging
-    return cookieValue;
+  } else {
+      console.log("No cookies found");
   }
-export default getCookie;  
+  return cookieValue;
+}
 
-
-
+export default getCookie;

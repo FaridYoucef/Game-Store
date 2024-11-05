@@ -35,7 +35,7 @@ function Login() {
       localStorage.setItem(REFRESH_TOKEN, res.data.refresh);
 
       // Redirect to homepage after successful login
-      navigate("/");
+      navigate("/user/profile/update/");
     } catch (error) {
       console.error("Login failed:", error);
       setError("Login failed. Please check your credentials and try again.");

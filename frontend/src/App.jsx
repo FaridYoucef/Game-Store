@@ -1,4 +1,3 @@
-import React, { useState, useEffect } from "react";
 import Navbar from "./components/Navbar";
 import HomePage from "./pages/HomePage";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
@@ -10,6 +9,8 @@ import Login from "./components/auth/Login";
 import axios from 'axios';
 import UserProfileForm from "./pages/UserProfileForm";
 import Basket from "./pages/Basket";
+import Payment from "./pages/Payment";
+import OrderDetails from "./pages/OrderDetails";
 
 // Configure Axios to include the correct CSRF token handling
 axios.defaults.xsrfCookieName = 'csrftoken';
@@ -28,10 +29,10 @@ function App() {
           <Route path="/products/:id" element={<ProductDetails />} />
           <Route path="/user/register/" element={<Register />} />
           <Route path="/user/login/" element={<Login />} />
-          <Route path="/user/profile/" element={< HomePage/>} />
+          <Route path="/user/profile/" element={<HomePage />} />
           <Route path="/user/profile/update/" element={<UserProfileForm />} />
-          <Route path="/bassket" element={<Basket/>} />
-        
+          <Route path="/bassket" element={<Basket />} />
+          <Route path="/order/:orderId" element={<OrderDetails />} />
         </Routes>
       </div>
     </Router>

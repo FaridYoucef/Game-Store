@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import api from '../api';
+import { useNavigate } from 'react-router-dom';
 
 const Basket = () => {
   const [basketItems, setBasketItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
   // Fetch basket items on component mount
   useEffect(() => {
@@ -23,7 +25,7 @@ const Basket = () => {
       setLoading(false);
     }
   };
-  
+
   const addToBasket = async (productId, quantity = 1) => {
     try {
       const response = await api.post(`/add/`, { product_id: productId, quantity });
@@ -32,7 +34,7 @@ const Basket = () => {
       setError('Failed to add item to basket');
     }
   };
-  
+
   const updateBasketItem = async (itemId, quantity) => {
     try {
       const response = await api.put(`/update/${itemId}/`, { quantity });
@@ -41,7 +43,7 @@ const Basket = () => {
       setError('Failed to update item');
     }
   };
-  
+
   const removeFromBasket = async (itemId) => {
     try {
       await api.delete(`/remove/${itemId}/`);
@@ -50,7 +52,34 @@ const Basket = () => {
       setError('Failed to remove item from basket');
     }
   };
+
+  // Function to create order
+  const createOrder = async () => {
+    try {
+        // Log basket items to verify their structure
+        console.log("Basket Items:", JSON.stringify(basketItems, null, 2));
+        //Map the prduct ID
+        const orderItems = basketItems.map(item => {
+            return {
+                product_id: item.product,  
+                quantity: item.quantity,
+            };
+        });
+
+        // Log the items being sent for order creation
+        console.log("Order Items being sent:", JSON.stringify(orderItems, null, 2));
+
+        const response = await api.post('/order/create/', { items: orderItems });
+        const orderId = response.data.id; // Get order ID from response
+        navigate(`/order/${orderId}`); // Redirect to OrderDetails page with order ID
+    } catch (error) {
+        setError('Failed to create order');
+        console.error("Order creation error:", error.response ? error.response.data : error.message); 
+    }
+};
+
   
+
   if (loading) return <div className="text-center">Loading...</div>;
   if (error) return <div className="text-center text-red-500">{error}</div>;
 
@@ -91,6 +120,13 @@ const Basket = () => {
           ))}
         </ul>
       )}
+      {/* Button to create an order */}
+      <button
+        onClick={createOrder}
+        className="mt-4 px-4 py-2 bg-green-500 text-white font-bold rounded"
+      >
+        Checkout
+      </button>
     </div>
   );
 };

@@ -1,51 +1,53 @@
 from rest_framework import status
 from rest_framework.response import Response
-from rest_framework.decorators import api_view
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.decorators import api_view, permission_classes
 from .models import Order, OrderItem
 from products.models import Product
 from .serializers import OrderSerializer
 
-
 @api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def create_order(request):
     user = request.user
     data = request.data
-    order_items = data.get('items',[])
-    
+    order_items = data.get('items', [])
+
+    # Check if order items exist
     if not order_items:
-        return Response({"error":" No items in the orser"}, status=status.HTTP_404_NOT_FOUND)
-    
+        return Response({"error": "No items in the order"}, status=status.HTTP_400_BAD_REQUEST)
+
     total_price = 0
-    
-    # Loop through each item in the order and calculate the total price
+    order = Order.objects.create(user=user, total_price=0)  # Initialize order with total_price 0
+
     for item in order_items:
+        if 'product_id' not in item:
+            return Response({"error": "Product ID is missing from the order items"}, status=status.HTTP_400_BAD_REQUEST)
+
         try:
-            product = Product.objects.get(id=item['product_id']) # Check if the product exists
-        except Product.DoesNotExist:   
+            product = Product.objects.get(id=item['product_id'])  # Check if the product exists
+            quantity = item.get('quantity', 1)  # Default quantity to 1 if not provided
+        except Product.DoesNotExist:
             return Response({"error": f"Product with id {item['product_id']} not found"}, status=status.HTTP_404_NOT_FOUND)
-        
-        total_price += product.price * item['quantity'] 
-        # Create the order in the database
-        order = Order.objects.create(user=user, total_price=total_price)
-        
-        for item in order_items:
-            product = Product.objects.get(id=item['product_id'])
-            OrderItem.objects.create(order=order, product=product, quantity=item['quantity'], price=product.price)
-            
-        serializer = OrderSerializer(order)
-        return Response (serializer.data, status=status.HTTP_201_CREATED)
-    
-    
-# API view to retrieve the details of a specific order
+
+        total_price += product.price * quantity  # Accumulate the total price
+        OrderItem.objects.create(order=order, product=product, quantity=quantity, price=product.price)
+
+    # Set the total price after adding all items
+    order.total_price = total_price
+    order.save()  # Save the order with the calculated total price
+
+    serializer = OrderSerializer(order)
+    return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+
 @api_view(['GET'])
-def get_order(reques, order_id):
+@permission_classes([IsAuthenticated])
+def get_order(request, order_id):
     try:
-        order = Order.objects.get(id=order_id, user=request.user)  # Get the order by ID and ensure it belongs to the current user
+        order = Order.objects.get(id=order_id, user=request.user)
     except Order.DoesNotExist:
         return Response({"error": "Order not found"}, status=status.HTTP_404_NOT_FOUND)
         
-    # Serialize the order and return it in the response
     serializer = OrderSerializer(order)
     return Response(serializer.data, status=status.HTTP_200_OK)
-    
-    

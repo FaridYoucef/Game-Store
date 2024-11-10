@@ -19,3 +19,15 @@ class OrderItem(models.Model):
     
     def __str__(self):
         return f"{self.quantity} of {self.product.name} in order {self.order.id}"
+
+
+class Delivery(models.Model):
+    order = models.OneToOneField(Order, on_delete=models.CASCADE, related_name='delivery')
+    address = models.CharField(max_length=255)
+    city = models.CharField(max_length=100)
+    postal_code = models.CharField(max_length=20)
+    delivery_status = models.CharField(max_length=50, default="Pending")
+    delivery_date = models.DateField(null=True, blank=True)
+
+    def __str__(self):
+        return f"Delivery for Order #{self.order.id}"

@@ -2,9 +2,9 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import api_view, permission_classes
-from .models import Order, OrderItem
+from .models import Order, OrderItem, Delivery
 from products.models import Product
-from .serializers import OrderSerializer
+from .serializers import OrderSerializer, DeliverySerializer
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
@@ -51,3 +51,24 @@ def get_order(request, order_id):
         
     serializer = OrderSerializer(order)
     return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def set_delivery(request, order_id):
+    try:
+        order = Order.objects.get(id=order_id, user=request.user)
+    except Order.DoesNotExist:
+        return Response({"error": "Order not found"}, status=status.HTTP_404_NOT_FOUND)
+
+    data = request.data
+    delivery, created = Delivery.objects.get_or_create(order=order)
+
+    delivery.address = data.get('address', delivery.address)
+    delivery.city = data.get('city', delivery.city)
+    delivery.postal_code = data.get('postal_code', delivery.postal_code)
+    delivery.save()
+
+    serializer = DeliverySerializer(delivery)
+    return Response(serializer.data, status=status.HTTP_201_CREATED)

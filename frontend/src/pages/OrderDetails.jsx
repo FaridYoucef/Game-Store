@@ -1,11 +1,12 @@
-// src/components/OrderDetails.js
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom'; // Import useNavigate
 import api from '../api';
 import setDelivery from '../utils/setDelivery';
 
 const OrderDetails = () => {
   const { orderId } = useParams();
+  const navigate = useNavigate();  // Hook for navigation to the Payment Page
+
   const [order, setOrder] = useState(null);
   const [deliveryInfo, setDeliveryInfo] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -17,7 +18,7 @@ const OrderDetails = () => {
   useEffect(() => {
     const fetchOrder = async () => {
       try {
-        const response = await api.get(`/order/${orderId}/`); 
+        const response = await api.get(`/order/${orderId}/`);
         setOrder(response.data);
         setDeliveryInfo(response.data.delivery || null); // Check if delivery data is present
       } catch (err) {
@@ -36,6 +37,11 @@ const OrderDetails = () => {
     } catch (error) {
       console.error("Failed to set delivery information");
     }
+  };
+
+  const handlePaymentRedirect = () => {
+    // Redirect to the payment page with order ID
+    navigate(`/payment/${orderId}`);
   };
 
   if (loading) return <p className="text-center">Loading...</p>;
@@ -109,6 +115,16 @@ const OrderDetails = () => {
         </div>
 
       </div>
+
+      {/* Pay Now Button */}
+      {deliveryInfo && (
+        <button
+          className="bg-green-500 text-white p-2 rounded mt-6 w-full"
+          onClick={handlePaymentRedirect}
+        >
+          Pay Now
+        </button>
+      )}
     </div>
   );
 };

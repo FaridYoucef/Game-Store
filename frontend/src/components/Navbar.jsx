@@ -78,9 +78,9 @@ const Navbar = () => {
             </a>
           </div>
 
-          <a href="/basket">
+          <Link to="/bassket">
             <SlBasket />
-          </a>
+          </Link>
 
           {/* Product list icon */}
           <Link

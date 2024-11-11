@@ -31,8 +31,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-)kod0)+ehpg831&0o+(js*-ya1j)r4o@*w1pm9z91a9%0uf8*x'
 
 # Stripe API keys from .env
-STRIPE_SECRET_KEY = config('STRIPE_SECRET_KEY')
-STRIPE_PUBLIC_KEY = config('STRIPE_PUBLIC_KEY')
+# settings.py
+# Stripe API keys
+STRIPE_SECRET_KEY = os.getenv('STRIPE_SECRET_KEY')
+STRIPE_PUBLISHABLE_KEY = os.getenv('STRIPE_PUBLISHABLE_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True

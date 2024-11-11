@@ -33,6 +33,7 @@ function App() {
           <Route path="/user/profile/update/" element={<UserProfileForm />} />
           <Route path="/bassket" element={<Basket />} />
           <Route path="/order/:orderId" element={<OrderDetails />} />
+          <Route path="/payment/:orderId" element={<Payment />} />
         </Routes>
       </div>
     </Router>

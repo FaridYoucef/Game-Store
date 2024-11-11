@@ -3,7 +3,7 @@ import { loadStripe } from '@stripe/stripe-js';
 import { Elements, CardElement, useStripe, useElements } from '@stripe/react-stripe-js';
 import api from '../api';
 
-const stripePromise = loadStripe('your_publishable_key_here');
+const stripePromise = loadStripe('STRIPE_PUBLISHABLE_KEY');
 
 const PaymentForm = ({ orderId, totalAmount }) => {
   const stripe = useStripe();

@@ -1,7 +1,7 @@
 from django.urls import path
-from .views import create_payment_intent, confirm_payment
+from . import views
 
 urlpatterns = [
-    path('api/create-payment-intent/', create_payment_intent, name='create_payment_intent'),
-    path('api/confirm-payment/', confirm_payment, name='confirm_payment'),
+    path('payment/create/', views.api_payment_create, name='api-payment-create'),
+    path('payment/finalize/<int:payment_id>/', views.api_payment_finalize, name='api-payment-finalize'),
 ]

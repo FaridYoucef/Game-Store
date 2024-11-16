@@ -11,7 +11,7 @@ urlpatterns = [
     path('api/', include('user.urls')),
     path('api/', include('basket.urls')),
     path('api/order/', include('order.urls')),
-    path('api/payments/', include('payments.urls')),
+     path('api/', include('payments.urls')),
     path('', views.home, name='home'),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 

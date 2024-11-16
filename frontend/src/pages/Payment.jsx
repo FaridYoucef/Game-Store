@@ -1,131 +1,143 @@
 import React, { useState } from 'react';
+import { useParams } from 'react-router-dom';
 import { loadStripe } from '@stripe/stripe-js';
-import { Elements, CardElement, useStripe, useElements } from '@stripe/react-stripe-js';
-import api from '../api';
+import api from '../api'; // Ensure you import your API configuration
 
-const stripePromise = loadStripe('STRIPE_PUBLISHABLE_KEY');
-
-const PaymentForm = ({ orderId, totalAmount }) => {
-  const stripe = useStripe();
-  const elements = useElements();
-  const [isProcessing, setIsProcessing] = useState(false);
+const Payment = () => {
+  const { orderId } = useParams();
+  const [username, setUsername] = useState('');
+  const [cardNumber, setCardNumber] = useState('');
+  const [expMonth, setExpMonth] = useState('');
+  const [expYear, setExpYear] = useState('');
+  const [cvc, setCvc] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [status, setStatus] = useState('');
   const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
 
-  const [accountHolderName, setAccountHolderName] = useState('');
-  const [country, setCountry] = useState('');
+  // Load Stripe public key from environment variable
+  const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY);
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    setIsProcessing(true);
+  const handleCardInfoChange = (event) => {
+    const { name, value } = event.target;
+    switch (name) {
+      case 'username':
+        setUsername(value);
+        break;
+      case 'cardNumber':
+        setCardNumber(value);
+        break;
+      case 'expMonth':
+        setExpMonth(value);
+        break;
+      case 'expYear':
+        setExpYear(value);
+        break;
+      case 'cvc':
+        setCvc(value);
+        break;
+      default:
+        break;
+    }
+  };
+
+  const initiatePayment = async () => {
+    setIsLoading(true);
     setError('');
-    setSuccess('');
-
-    if (!stripe || !elements) return;
+    setStatus('');
 
     try {
-      const { data } = await api.post('/api/create-payment-intent/', {
-        order_id: orderId,
-        account_holder_name: accountHolderName,
-        country,
-      });
+      const stripe = await stripePromise; // Get the Stripe instance
 
-      const clientSecret = data.client_secret;
-      const paymentId = data.payment_id;
-
-      const result = await stripe.confirmCardPayment(clientSecret, {
-        payment_method: {
-          card: elements.getElement(CardElement),
-          billing_details: {
-            name: accountHolderName,
-          },
+      const { token, error } = await stripe.createToken({
+        card: {
+          number: cardNumber,
+          exp_month: expMonth,
+          exp_year: expYear,
+          cvc: cvc,
         },
       });
 
-      if (result.error) {
-        setError(result.error.message);
+      if (error) {
+        setError(error.message);
       } else {
-        if (result.paymentIntent.status === 'succeeded') {
-          await api.post('/api/confirm-payment/', { payment_id: paymentId });
-          setSuccess('Payment successful!');
+        // Send the token to your server for payment processing
+        const response = await api.post('payment/create/', {
+          order_id: orderId,
+          token: token.id,
+          username,
+        });
+
+        if (response.data.status === "completed") {
+          setStatus("Payment Successful!");
         } else {
-          setError('Payment could not be confirmed.');
+          setStatus("Payment is being processed. Please check back later.");
         }
       }
     } catch (err) {
-      setError('Error processing payment: ' + err.message);
+      setError("Payment failed: " + (err.response?.data?.error || "Unknown error"));
+    } finally {
+      setIsLoading(false);
     }
-
-    setIsProcessing(false);
   };
 
   return (
-    <form onSubmit={handleSubmit} className="max-w-xs mx-auto p-4 bg-white shadow-lg rounded-lg">
-      <h2 className="text-xl font-semibold text-gray-700 mb-4 text-center">Complete Payment</h2>
-      <p className="text-gray-500 mb-4 text-center">Total Amount: ${totalAmount}</p>
-
-      <div className="mb-4">
-        <label className="block text-gray-700 font-medium mb-1">Account Holder Name</label>
+    <div className="max-w-md mx-auto p-6 bg-white shadow-lg rounded-lg mt-10">
+      <h1 className="text-2xl font-bold mb-4 text-center">Order Payment</h1>
+      <form className="space-y-4">
         <input
           type="text"
-          value={accountHolderName}
-          onChange={(e) => setAccountHolderName(e.target.value)}
-          className="w-full p-2 border rounded-lg focus:outline-none focus:ring focus:border-blue-300"
-          placeholder="John Doe"
-          required
+          name="username"
+          placeholder="Username"
+          className="border p-2 w-full rounded"
+          value={username}
+          onChange={handleCardInfoChange}
         />
-      </div>
-
-      <div className="mb-4">
-        <label className="block text-gray-700 font-medium mb-1">Country</label>
         <input
           type="text"
-          value={country}
-          onChange={(e) => setCountry(e.target.value)}
-          className="w-full p-2 border rounded-lg focus:outline-none focus:ring focus:border-blue-300"
-          placeholder="United States"
-          required
+          name="cardNumber"
+          placeholder="Card Number"
+          className="border p-2 w-full rounded"
+          value={cardNumber}
+          onChange={handleCardInfoChange}
         />
-      </div>
-
-      <div className="mb-4">
-        <label className="block text-gray-700 font-medium mb-1">Card Information</label>
-        <div className="p-2 border rounded-lg">
-          <CardElement
-            options={{
-              style: {
-                base: {
-                  fontSize: '16px',
-                  color: '#424770',
-                  '::placeholder': { color: '#aab7c4' },
-                },
-                invalid: { color: '#9e2146' },
-              },
-            }}
+        <div className="flex space-x-4">
+          <input
+            type="text"
+            name="expMonth"
+            placeholder="Exp Month"
+            className="border p-2 w-full rounded"
+            value={expMonth}
+            onChange={handleCardInfoChange}
+          />
+          <input
+            type="text"
+            name="expYear"
+            placeholder="Exp Year"
+            className="border p-2 w-full rounded"
+            value={expYear}
+            onChange={handleCardInfoChange}
           />
         </div>
-      </div>
-
+        <input
+          type=" text"
+          name="cvc"
+          placeholder="CVC"
+          className="border p-2 w-full rounded"
+          value={cvc}
+          onChange={handleCardInfoChange}
+        />
+      </form>
       <button
-        type="submit"
-        disabled={!stripe || isProcessing}
-        className="w-full p-3 mt-4 bg-blue-500 text-white font-medium rounded-lg hover:bg-blue-600 focus:outline-none focus:bg-blue-700"
+        onClick={initiatePayment}
+        className="w-full bg-blue-500 text-white py-2 px-4 rounded mt-4 hover:bg-blue-600 transition duration-200"
+        disabled={isLoading}
       >
-        {isProcessing ? 'Processing...' : 'Pay Now'}
+        {isLoading ? 'Processing...' : 'Pay Now'}
       </button>
-
-      {error && <p className="text-red-600 mt-3 text-center">{error}</p>}
-      {success && <p className="text-green-600 mt-3 text-center">{success}</p>}
-    </form>
+      {status && <p className="text-center text-lg mt-4 text-green-500">{status}</p>}
+      {error && <p className="text-center text-lg mt-4 text-red-500">{error}</p>}
+    </div>
   );
 };
-
-const Payment = ({ orderId, totalAmount }) => (
-  <div className="min-h-screen flex items-center justify-center bg-gray-100">
-    <Elements stripe={stripePromise}>
-      <PaymentForm orderId={orderId} totalAmount={totalAmount} />
-    </Elements>
-  </div>
-);
 
 export default Payment;

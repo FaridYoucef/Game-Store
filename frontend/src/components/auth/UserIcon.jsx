@@ -41,7 +41,7 @@ const UserIcon = () => {
     };
 
     fetchUserInfo();
-  }, [isAuthenticated]);
+  }, []);
 
   //Logout fonctionality
   const handleLogout = async () => {

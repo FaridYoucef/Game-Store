@@ -99,17 +99,17 @@ MIDDLEWARE = [
 ]
 
 CORS_ORIGIN_WHITELIST = [
-    'http://localhost:5174',  # Add your frontend domain here
+    'http://localhost:5173',  # Add your frontend domain here
 ]
 CORS_ALLOWED_ORIGINS = [
-    'http://localhost:5174',
+    'http://localhost:5173',
 ]
 
 CORS_ALLOW_CREDENTIALS = True
 
 CSRF_TRUSTED_ORIGINS = [
-    'http://localhost:5174',  # Your React app's URL
-    'http://127.0.0.1:5174',  # If your frontend might also use this
+    'http://localhost:5173',  # Your React app's URL
+    'http://127.0.0.1:5173',  # If your frontend might also use this
 ]
 
 
